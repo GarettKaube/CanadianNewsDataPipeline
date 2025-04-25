@@ -1,7 +1,6 @@
 # Canadian News Data Pipeline
 
 ## Overview
-----------
 
 News data pipeline for extracting canadian news, loading them to postgres and transforming appropriately.
 The news scraping tries to use newspaper4k for majority of the weight lifting. A manual news scraper
@@ -13,13 +12,12 @@ loaded to postgres and the Results are displayed using streamlit and Plotly. Wit
 can be seen for the selected dates.
 
 ## Features
-___
+
 - Custom news scrapers for accurate, clean news extraction
 - Uses ELT and ETL hybrid pipeline managed with Apache Airflow where ELT automates news extraction, ingestion into Postgres, dbt transformations, while french articles are extracted from postgres and translated to english, loaded back to Postgres, then dbt transformed (ETL)
 - Streamlit dashboard for summarizing news sentiment for Mark Carney and Pierre Poilievre over time
 
 ## Architecture
-___
 - ### Data Ingestion
 <img src="images/data_ingestion.png" width="800"/>
 
