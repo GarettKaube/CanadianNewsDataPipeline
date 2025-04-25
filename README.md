@@ -24,7 +24,7 @@ ___
 <img src="images/data_ingestion.png" width="800"/>
 
 - ### Sentiment Analysis ETLT
-<img src="images/sentiment-2025-04-25-1040.png" width="800"/>
+<img src="images/sentiment-2025-04-25-1040.png" width="700"/>
 
 ## DBT models
 ![dbt](images/dbt.PNG)
