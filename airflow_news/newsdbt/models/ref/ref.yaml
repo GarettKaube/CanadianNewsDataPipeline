@@ -1,0 +1,11 @@
+version: 2
+models:
+  - name: transformed
+    columns:
+      - name: ID
+        tests:
+          - not_null
+          - unique
+
+
+

@@ -1,0 +1,36 @@
+{
+    "national_post": {
+        "news_name": "National Post",
+        "category": "politics",
+        "url": "https://nationalpost.com/category/news/politics/",
+        "base_url": "https://nationalpost.com",
+        "article_contained_in": "section",
+        "attrs": {
+            "class":"story-v2-content-element article-content__content-group article-content__content-group--story"
+        },
+        "skip_n_links": 5,
+        "bias": "right",
+        "use_proxy": true
+    },
+    
+    "toronto_sun": {
+        "news_name": "Toronto Sun",
+        "category": "politics",
+        "url": "https://torontosun.com/category/news/national/federal_elections/",
+        "base_url": "https://torontosun.com",
+        "article_contained_in": "section",
+        "attrs": {
+            "class":"article-content__content-group article-content__content-group--story"
+        },
+        "skip_n_links": 5,
+        "bias": "right",
+        "use_proxy": true,
+        "email_search_settings": {
+            "tag": "a",
+            "attrs": {
+                "class": "social-share__link flex-align-justify-center",
+                "title": "Send an Email"
+            }
+        }
+    }
+}

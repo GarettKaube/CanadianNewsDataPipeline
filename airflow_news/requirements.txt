@@ -1,0 +1,16 @@
+pandas==2.2.3
+numpy==1.26.4
+openpyxl
+apache-airflow-providers-postgres
+dbt-core==1.8.7
+dbt-postgres==1.8.2
+requests==2.31.0
+newspaper4k==0.9.3.1
+feedparser
+beautifulsoup4==4.13.3
+lxml_html_clean
+selenium==4.30.0
+webdriver-manager==4.0.2
+astronomer-cosmos[dbt.all]
+openai==1.73.0
+googletrans==4.0.2

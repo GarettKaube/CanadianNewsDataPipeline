@@ -1,0 +1,14 @@
+version: 2
+models:
+  - name: stg_articles
+    columns:
+      - name: ID
+        tests:
+          - not_null
+          - unique
+  
+  - name: stg_sentiment
+    columns:
+      - name: article_id
+        tests:
+          - not_null

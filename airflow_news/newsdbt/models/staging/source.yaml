@@ -1,0 +1,9 @@
+version: 2
+sources:
+  - name: news_source_table
+    database: Setimentdb
+    schema: public
+    tables:
+      - name: raw_news
+      - name: sentiment_raw
+  

@@ -1,0 +1,24 @@
+{
+    "toronto_star": {
+        "news_name": "thestar",
+        "base_url":"https://www.thestar.com/",
+        "category": "politics",
+        "feeds": {
+            "politics": "https://www.thestar.com/search/?f=rss&t=article&c=politics*&l=50&s=start_time&sd=desc"
+        },
+        "country": "ca",
+        "bias": "left",
+        "use_proxy": true
+    },
+    "global_news": {
+        "news_name": "globalnews",
+        "base_url": "https://globalnews.ca/",
+        "category": "politics",
+        "feeds": {
+            "politics": "https://globalnews.ca/politics/feed/"
+        },
+        "country": "ca",
+        "bias": "left",
+        "use_proxy": true
+    }
+}

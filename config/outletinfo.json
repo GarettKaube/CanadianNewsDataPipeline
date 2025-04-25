@@ -1,0 +1,87 @@
+{
+    "readthemaple": {
+        "news_name": "readthemaple",
+        "base_url":"https://www.readthemaple.com",
+        "url": "https://www.readthemaple.com/tag/news/",
+        "category": "poltics",
+        "country": "ca",
+        "link_class": "item-image global-image global-image-orientation global-radius",
+        "skip_n_links": 0,
+        "bias": "left",
+        "use_proxy": true
+    },
+    "ctvnews": {
+        "news_name": "ctvnews",
+        "category": "politics",
+        "country": "ca",
+        "url": "https://www.ctvnews.ca/politics/",
+        "base_url": "https://www.ctvnews.ca",
+        "article_contained_in": "article",
+        "attrs": {
+            "class":"b-article-body"
+        },
+        "skip_n_links": 0,
+        "link_class":  "c-link",
+        "use_selenium": true,
+        "link_key_word": "article",
+        "bias": "centre",
+        "use_proxy": true,
+        "email_search_settings": {
+            "tag": "a",
+            "attrs": {
+                "class": "c-link b-full-author-bio__social-link",
+                "rel":"noreferrer"
+            }
+        }
+    },
+    "lapresse": {
+        "news_name": "lapresse",
+        "base_url":"https://www.lapresse.ca",
+        "url": "https://www.lapresse.ca/elections-federales/",
+        "category": "poltics",
+        "country": "ca",
+        "skip_n_links": 0,
+        "bias": "left",
+        "link_key_word": "elections-federales",
+        "translate": true,
+        "language": "french",
+        "author_search_settings": {
+            "tag": "span",
+            "attrs": {
+                "class": "name authorModule__name",
+                "itemprop": "name"
+            }
+        },
+        "use_proxy": true
+    },
+    "globeandmail": {
+        "news_name": "theglobeandmail",
+        "base_url": "https://www.theglobeandmail.com",
+        "link_key_word": "article",
+        "url": "https://www.theglobeandmail.com/politics/",
+        "category": "poltics",
+        "country": "ca",
+        "link_class": "c-card__grid c-card__link",
+        "skip_n_links": 0,
+        "bias": "centre",
+        "use_proxy": true,
+        "email_search_settings": {
+            "tag": "a",
+            "attrs": {
+                "class": "o-author-meta__contact-link text-gmr-4 mb-8"
+            }
+        }
+    },
+    "rebelnews": {
+        "news_name": "rebelnews",
+        "base_url": "https://www.rebelnews.com",
+        "url": "https://www.rebelnews.com/politics",
+        "category": "poltics",
+        "country": "ca",
+        "link_class": "text-black",
+        "skip_n_links": 0,
+        "bias": "right",
+        "use_proxy": false,
+        "use_selenium": true
+    }
+}

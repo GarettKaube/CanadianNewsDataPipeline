@@ -1,0 +1,73 @@
+version: 2
+models:
+  - name: articles
+    columns:
+      - name: article_id
+        tests:
+          - not_null
+          - unique
+          - relationships:
+              to: ref('article_author_join_table')
+              field: article_id
+      
+      - name: authors
+        columns:
+          - name: author_id
+  
+  - name: authors
+    columns:
+      - name: author_id
+        tests:
+          - unique
+          - not_null
+          - relationships:
+              to: ref('article_author_join_table')
+              field: author_id
+
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - author_url
+            - first_name
+            - last_name
+            - author_email
+  
+  - name: article_author_join_table
+    columns:
+      - name: article_id
+        tests:
+          - relationships:
+              to: ref('articles')
+              field: article_id
+      
+      - name: article_author_id
+        tests:
+          - not_null
+          - unique
+    
+      - name: author_id
+        tests:
+          - relationships:
+              to: ref('authors')
+              field: author_id
+  
+  - name: sources
+    columns:
+      - name: source_id
+        tests:
+          - relationships:
+              to: ref('articles')
+              field: source_id
+          - not_null
+          - unique
+
+  - name: sentiment
+    columns:
+      - name: article_id
+        tests:
+          - relationships:
+              to: ref('articles')
+              field: article_id
+
+
+
