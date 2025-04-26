@@ -258,7 +258,11 @@ def get_sentiment(ti) -> list[dict, str|float|None]:
 def get_sentiment_batch_results(ti):
     sentiment = []
 
-    output_file_name = ti.xcom_pull(task_ids="Analyze_Sentiment")
+    output_file_name = ti.dag_run.conf.get("batch_file_name")
+    
+    if output_file_name is None:
+        output_file_name = ti.xcom_pull(task_ids="Analyze_Sentiment")
+
     logger.info(f"Output file name: {output_file_name}")
 
     file_response = openai_client.files.content(output_file_name)
