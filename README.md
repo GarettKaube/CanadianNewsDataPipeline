@@ -1,7 +1,6 @@
-## Canadian News Data Pipeline
+# Canadian News Data Pipeline
 
-### Overview
-----------
+## Overview
 
 News data pipeline for extracting canadian news, loading them to postgres and transforming appropriately.
 The news scraping tries to use newspaper4k for majority of the weight lifting. A manual news scraper
@@ -12,8 +11,18 @@ the OpenAI batch api is used to extract sentiment scores for each candidate if t
 loaded to postgres and the Results are displayed using streamlit and Plotly. With this streamlit dashboard, each candidate's overal news sentiment scores
 can be seen for the selected dates.
 
-### Features
-___
+## Features
+
 - Custom news scrapers for accurate, clean news extraction
 - Uses ELT and ETL hybrid pipeline managed with Apache Airflow where ELT automates news extraction, ingestion into Postgres, dbt transformations, while french articles are extracted from postgres and translated to english, loaded back to Postgres, then dbt transformed (ETL)
 - Streamlit dashboard for summarizing news sentiment for Mark Carney and Pierre Poilievre over time
+
+## Architecture
+- ### Data Ingestion
+<img src="images/data_ingestion.png" width="800"/>
+
+- ### Sentiment Analysis ETLT
+<img src="images/sentiment-2025-04-25-1040.png" width="700"/>
+
+## DBT models
+![dbt](images/dbt.PNG)
