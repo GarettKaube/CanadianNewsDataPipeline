@@ -26,6 +26,8 @@ can be seen for the selected dates.
 
 ## DBT models
 ![dbt](images/dbt.PNG)
+### Data Model:
+<img src="images/datamodel.PNG" width="800"/>
 
 ## Streamlit Dashboard
 The left plot displays the bias of the sampled news outlets the right pplot displays the average sentiment for each bias.
