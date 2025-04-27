@@ -27,15 +27,11 @@ logger = logging.getLogger('sentiment_dashboard')
 nltk.download('stopwords')
 db_address = os.getenv("POSTGRES_ADRESS")
 
-def pull_data(n_days_ago) -> pd.DataFrame:
+def pull_data(start, end) -> pd.DataFrame:
     engine = sa.create_engine(db_address)
-    first_day = pd.Timestamp(datetime.datetime.now()) \
-        - pd.DateOffset(days=n_days_ago[0])
-    second_day = pd.Timestamp(datetime.datetime.now()) \
-        - pd.DateOffset(days=n_days_ago[1])
-    first_day = first_day.strftime("%Y-%m-%d %H:%M:%S")
-    second_day = second_day.strftime("%Y-%m-%d %H:%M:%S")
-    logger.info(f"Yesturday: {first_day}")
+    start = start.strftime("%Y-%m-%d %H:%M:%S")
+    end = end.strftime("%Y-%m-%d %H:%M:%S")
+    logger.info(f"end: {end}")
 
     query = """SELECT DISTINCT ON (a.article_id)
                     s.*, 
@@ -49,12 +45,12 @@ def pull_data(n_days_ago) -> pd.DataFrame:
                     ON s.article_id = a.article_id
                 LEFT JOIN "STAGE_DATAMART".sources as src
                     ON a.source_id = src.source_id
-                WHERE a.publishedat BETWEEN :second_day AND :first_day
+                WHERE a.publishedat BETWEEN :start AND :end
                 """
     
     with engine.connect() as conn:
         result = conn.execute(
-            sa.text(query), {"first_day": first_day, "second_day":second_day}
+            sa.text(query), {"end": end, "start":start}
         )
         df = pd.DataFrame(result)
         logger.debug(f"Fetched df from database:\n{df}")
@@ -62,13 +58,14 @@ def pull_data(n_days_ago) -> pd.DataFrame:
         pd.options.display.max_colwidth = 200
         if not df.empty:
             # Convert data types
+            df = df[df['news_source_name'] != "rebelnews"]
             df['sentiment_mark'] = df['sentiment_mark'].astype(float)\
                 .replace({0.0:np.nan})
             df['sentiment_poilievre'] = df['sentiment_poilievre'].astype(float)\
                 .replace({0.0:np.nan})
             
             logger.debug(df)
-            logger.debug(df['news_source_name'].value_counts())
+            logger.debug(f"{start}{end}\n{df['news_source_name'].value_counts()}")
             logger.debug(df['bias'].value_counts())
             with pd.option_context(
                 'display.max_rows', 
@@ -87,9 +84,7 @@ def pull_data(n_days_ago) -> pd.DataFrame:
 
 
 
-def get_relavant_article_content(n_days_ago) -> pd.DataFrame|None:
-    yesterday = pd.Timestamp(datetime.datetime.now()) - pd.DateOffset(days=n_days_ago[0])
-    yesterday2 = pd.Timestamp(datetime.datetime.now()) - pd.DateOffset(days=n_days_ago[1])
+def get_relavant_article_content(start, end) -> pd.DataFrame|None:
     meta_data = sa.MetaData()
     engine = sa.create_engine(db_address)
     table = sa.Table(
@@ -104,7 +99,7 @@ def get_relavant_article_content(n_days_ago) -> pd.DataFrame|None:
             table.c.source_id, table.c.article_content, 
             table.c.publishedat, table.c.url, table.c.article_id
         )\
-            .where(table.c.publishedat.between(yesterday2, yesterday))\
+            .where(table.c.publishedat.between(start, end))\
             .where(table.c.article_content.ilike("%Carney%") | 
                    table.c.article_content.ilike("%Poilievre%")
             )
@@ -336,13 +331,15 @@ def plot_sentiment_overtime(
 def main():
     st.set_page_config(layout="wide")
     st.title("Mark Carney Versus Pierre Poilievre News Sentiment")
-    slider = st.slider("Number of days ago", min_value=1, max_value=10, step=1,
-                  value=(1,2))
+    end = datetime.date.today()
+    start = datetime.date(2025, 4, 15)
+    slider = st.slider("Number of days ago", min_value=start, max_value=end,
+                  value=(end, end- datetime.timedelta(days=1)))
     
 
     # Get data 
-    df = pull_data(n_days_ago=slider)
-    articles = get_relavant_article_content(n_days_ago=slider)
+    df = pull_data(slider[0], slider[1])
+    articles = get_relavant_article_content(slider[0], slider[1])
 
     metric_cols = st.columns([3,3,3])
 
