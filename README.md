@@ -29,7 +29,7 @@ can be seen for the selected dates.
 
 ## Streamlit Dashboard
 The left plot displays the bias of the sampled news outlets the right pplot displays the average sentiment for each bias.
-S slider is available to change the sample dates. News sources were selected with the goal of having an even split between left and right political views.
+A date slider is available to change the sample dates. News sources were selected with the goal of having an even split between left and right political views.
 <img src="images/dashboard.PNG" width="900"/>
 ### Average Sentiment Over Time:
 <img src="images/dashboard2.PNG" width="900"/>
