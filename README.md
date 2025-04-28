@@ -95,7 +95,7 @@ news:
 - ### Step 6:
 Run ```docker-compose  -f airflow_news/docker-compose.yaml up -d``` in the terminal and wait for completion
 - ### Step 7:
-Run ```docker-compose -f airflow/docker-compose.yaml run airflow-worker airflow users create --role Admin --username <username> --email <email> --firstname <name> --lastname <name> --password <password>``` in the terminal and wait for completion
+Run ```docker-compose -f airflow/docker-compose.yaml run airflow-worker airflow users create --role Admin --username <username> --email <email> --firstname <name> --lastname <name> --password <password>``` in the terminal and wait for completion. This will create the Airflow profile to log into the UI
 - ### Step 8:
 Open the Airflow UI at http://localhost:8080 and log into the account you just made
 - ### Step 9:
