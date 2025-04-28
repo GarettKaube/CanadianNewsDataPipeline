@@ -25,21 +25,8 @@ from pendulum import now
 from airflow.configuration import conf
 conf.set("core", "dagbag_import_timeout", "120")
 
-# Name of the PythonOperator for each news source x
-rss_task_str = lambda x: f"Get_{x}_RSS_News"
-
-args = {
-    'owner': "Airflow",
-    'depends_on_past': False,
-    "start_date": days_ago(31),
-    "email": "",
-    "email_on_failure": True,
-    "email_on_retry": True,
-    "retries": 1,
-    "retry_delay": timedelta(minutes=2)
-}
-
-
+# Number of articles to scraper per source
+N_ARTICLES = 10
 
 MAIN_DIR = Path(os.path.dirname(os.path.abspath(__file__))).parent
 CONFIG_PATH = MAIN_DIR / "config"
@@ -72,6 +59,21 @@ def load_config(path) -> list|None:
         return conf
     
 
+# Name of the PythonOperator for each news source x
+rss_task_str = lambda x: f"Get_{x}_RSS_News"
+
+# DAG args
+args = {
+    'owner': "Airflow",
+    'depends_on_past': False,
+    "start_date": days_ago(31),
+    "email": "",
+    "email_on_failure": True,
+    "email_on_retry": True,
+    "retries": 1,
+    "retry_delay": timedelta(minutes=2)
+}
+
 start_date=days_ago(3)
 with DAG(
     dag_id="News_Ingestion",
@@ -87,7 +89,7 @@ with DAG(
                                           path in config_paths]
     rss_feeds_conf, link_conf, manual_news = loaded_configs
 
-    n_articles = 10
+    
 
     all_sources = [list(conf.keys()) for conf in loaded_configs]
     all_sources = list(chain.from_iterable(all_sources))
@@ -117,7 +119,7 @@ with DAG(
                 get_news = PythonOperator(
                     task_id=rss_task_str(source),
                     python_callable=parse_articles,
-                    op_args=[source_dict, n_articles],
+                    op_args=[source_dict, N_ARTICLES],
                     execution_timeout=timedelta(minutes=15)
                 )
                 tasks.append(get_news)
@@ -129,7 +131,7 @@ with DAG(
                         task_id=rss_task_str(source),
                         python_callable=get_news_via_links,
                         op_args=[link_conf[source], source],
-                        op_kwargs={"n_articles": n_articles},
+                        op_kwargs={"n_articles": N_ARTICLES},
                         execution_timeout=timedelta(minutes=15)
                     )
                     
@@ -144,7 +146,7 @@ with DAG(
                     np_news_task = PythonOperator(
                         task_id=rss_task_str(source),
                         python_callable=get_news_manual,
-                        op_args=[manual_news[source], n_articles],
+                        op_args=[manual_news[source], N_ARTICLES],
                         execution_timeout=timedelta(minutes=15)
                     )
                     tasks.append(np_news_task)
