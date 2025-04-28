@@ -6,14 +6,13 @@ import requests
 from bs4 import BeautifulSoup
 import json
 import re
-from requests.exceptions import RequestException
+from requests.exceptions import RequestException, ConnectionError
 import sys
 import os
 from pathlib import Path
 from datetime import datetime
 import time
 import logging
-from urllib3.exceptions import NameResolutionError
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from news.utils import get_author_email as get_author_email_naive
 
@@ -86,7 +85,7 @@ class AuthorFinder:
                 author_url, headers={"User-Agent": "Mozilla/5.0"}
             ).text
             return html
-        except NameResolutionError:
+        except ConnectionError:
             logger.error(f"Failed to connect to {author_url}")
             return None
 
