@@ -9,7 +9,7 @@ was created to scrape what newspaper4k fails to scrape. After scraping, the news
 After, news that mention the two most prominent Canadian Prime Minister candidates: Mark Carney and Pierre Poilievre. With these articles
 the OpenAI batch api is used to extract sentiment scores for each candidate if they are mentioned in the news article. These sentiment scores are
 loaded to postgres and the Results are displayed using streamlit and Plotly. With this streamlit dashboard, each candidate's overal news sentiment scores
-can be seen for the selected dates.
+can be seen for the selected dates. Major Canadian news press were sampled from while trying to keep political bias balanced to ensure non-bias results.
 
 ## Features
 
