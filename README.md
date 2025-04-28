@@ -103,6 +103,8 @@ In the Airflow UI, navigate to the connections page in the admin tab and add the
 - ### Step 10:
 In the Airflow UI, navigate to the variables page and add the variable "OpenAIKey" with value as your api key
 
+**Note**: Proxy use is enabled by default, to disable, set "use_proxy": false in the scraper config json files 
+
 Now the News_Ingestion pipleine should be able to be triggered and data should start flowing into the database.
 
 ## Airflow DAGS:
