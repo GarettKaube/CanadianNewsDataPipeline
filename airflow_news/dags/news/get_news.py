@@ -51,7 +51,7 @@ with open(MAIN_DIR / "config/proxy_server.json", 'r') as f:
     logger.info(f"Using proxy: {proxies}")
 
 
-def get_rss_feed_links(rss_link, link_attributes:dict=None):
+def get_rss_feed_links(rss_link, link_attributes:dict=None) -> list:
     response = requests.get(
         rss_link, headers=headers
     )
@@ -294,6 +294,38 @@ def get_article_info(
     return articles_written_by_authors
 
 
+def article_extraction_loop(
+        news:list,
+        links, 
+        base_url,
+        n_articles,
+        scraper_settings,
+        article_parser
+    ):
+    for i, link in enumerate(links):
+        can_scrape = check_if_can_scrape(
+            base_url=base_url, 
+            url=link, 
+            user_agent="Mozilla/5.0"
+        )
+
+        if can_scrape:
+            logger.info(
+                    f"({i+1}/{n_articles}) Getting article info from {link}"
+            )
+            try:
+                article_info = get_article_info(
+                    link, scraper_settings, article_parser
+                )
+                logger.info(f"Returned info:{article_info}")
+
+                news += article_info
+                time.sleep(1)
+            except Exception as e:
+                logger.exception(f"failed to connect to {link}")
+    return news
+
+
 def parse_articles(
         rss_feed_dict:dict, n_articles:int|None=None
     ) -> list[list[dict]]:
@@ -339,25 +371,14 @@ def parse_articles(
 
             links = links[:n_articles]
             # Get the info for the linked articles
-            for i, link in enumerate(links):
-                can_scrape = check_if_can_scrape(
-                    base_url=rss_feed_dict["base_url"], 
-                    url=link, 
-                    user_agent="Mozilla/5.0"
-                )
-
-                if can_scrape:
-                    logger.info(
-                        f"({i+1}/{n_articles}) Getting article info from {link}"
-                    )
-
-                    article_info = get_article_info(
-                        link, rss_feed_dict, article_parser
-                    )
-                    logger.info(f"Returned info:{article_info}")
-
-                    news += article_info
-                    time.sleep(2)
+            news = article_extraction_loop(
+                news=news,
+                links=links,
+                n_articles=n_articles,
+                base_url=rss_feed_dict["base_url"],
+                scraper_settings=rss_feed_dict,
+                article_parser=article_parser
+            )
     logger.info(
         f"Sucessully extracted {len(news)}/{len(links)} articles"
         )
@@ -428,29 +449,14 @@ def get_news_via_links(settings:dict, news_name:str, n_articles=None) -> list[di
 
         n_articles = len(links) if n_articles is None else n_articles
         links = links[:n_articles]
-        for i, link in enumerate(links):
-            try:
-                logger.info(
-                        f"({i+1}/{n_articles}) Getting article info from {link}"
-                )
-
-                # Check robots.txt
-                can_scrape = check_if_can_scrape(
-                    base_url=base_url, 
-                    url=link, 
-                    user_agent="Mozilla/5.0"
-                )
-                
-                if can_scrape: 
-                    article_info = get_article_info(
-                        link, settings, article_parser
-                    )
-                    logger.info(f"Returned info:{article_info}")
-                    news += article_info
-            except Exception as e:
-                logger.exception(f"failed to connect to {link}")
-            finally:
-                time.sleep(2)
+        news = article_extraction_loop(
+            news=news,
+            links=links,
+            base_url=base_url,
+            n_articles=n_articles,
+            scraper_settings=settings,
+            article_parser=article_parser
+        )
 
     logger.info(
         f"Sucessully extracted {len(news)}/{len(links)} articles"

@@ -38,7 +38,7 @@ def sample_settings():
 @pytest.fixture
 def sample_html():
     with open(
-        "./test_news/fixtures/html_sample_manual_scraping.html", 
+        "./test_news/fixtures/manual_scraper/html_sample_manual_scraping.html", 
         "r", 
         encoding="utf-8"
     ) as f:

@@ -204,7 +204,8 @@ def test_extract_article_links(
         assert urls == expected_urls
 
 
-def test_parse_published_time(sample_html, sample_settings):
+def test_parse_published_time(sample_data, sample_settings):
+    sample_html, _, _ = sample_data
     bs = BeautifulSoup(sample_html)
     manualscraper = ManualNewsScraper(sample_settings, author_finder)
     pt = manualscraper._parse_published_time(bs)
@@ -262,9 +263,9 @@ def test_get_article_info(
 )     
 @patch(module_location + ".proxy_requests")
 def test_parse_articles(mock_proxy_requests:MagicMock, mock_extract_article_links,
-            sample_html_content, sample_settings, author_finder):
+            sample_data, sample_settings, author_finder):
         
-        sample_html, sample_content, test_data = sample_html_content
+        sample_html, sample_content, test_data = sample_data
 
         class AuthorFinder:
             def parse_author_info(self, *args, **kwargs):
