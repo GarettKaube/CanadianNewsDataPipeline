@@ -13,7 +13,7 @@ from pathlib import Path
 from datetime import datetime
 import time
 import logging
-
+from urllib3.exceptions import NameResolutionError
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from news.utils import get_author_email as get_author_email_naive
 
@@ -81,10 +81,14 @@ class AuthorFinder:
         self.email_search_settings = email_search_settings
 
     def fetch_author_page_html(self, author_url):
-        html = requests.get(
-            author_url, headers={"User-Agent": "Mozilla/5.0"}
-        ).text
-        return html
+        try:
+            html = requests.get(
+                author_url, headers={"User-Agent": "Mozilla/5.0"}
+            ).text
+            return html
+        except NameResolutionError:
+            logger.error(f"Failed to connect to {author_url}")
+            return None
 
     def get_author_url(self, author_html):
         """ Gets the href attribute value for the 'a' tag
