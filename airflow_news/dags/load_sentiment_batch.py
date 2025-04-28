@@ -20,10 +20,10 @@ from news.sentiment_batch_job_tasks import (
 
 
 args = {
-    'owner': "Garett",
+    'owner': "Airflow",
     'depends_on_past': False,
-    "start_date": datetime.datetime.today(),
-    "email": "gkaube@outlook.com",
+    "start_date": days_ago(31),
+    "email": "",
     "email_on_failure": True,
     "email_on_retry": True,
     "retries": 1,

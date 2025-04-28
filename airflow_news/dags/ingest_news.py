@@ -29,10 +29,10 @@ conf.set("core", "dagbag_import_timeout", "120")
 rss_task_str = lambda x: f"Get_{x}_RSS_News"
 
 args = {
-    'owner': "Garett",
+    'owner': "Airflow",
     'depends_on_past': False,
     "start_date": days_ago(31),
-    "email": "gkaube@outlook.com",
+    "email": "",
     "email_on_failure": True,
     "email_on_retry": True,
     "retries": 1,
