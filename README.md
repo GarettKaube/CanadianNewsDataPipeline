@@ -26,10 +26,12 @@ can be seen for the selected dates.
 
 ## DBT models
 ![dbt](images/dbt.PNG)
+### Data Model:
+<img src="images/datamodel.PNG" width="800"/>
 
 ## Streamlit Dashboard
-The left plot displays the bias of the sampled news outlets the right pplot displays the average sentiment for each bias.
-A date slider is available to change the sample dates. News sources were selected with the goal of having an even split between left and right political views.
+The dashboard pulls data from the data marts based on the date slider input. The left plot displays the bias of the sampled news outlets the right pplot displays the average sentiment for each bias.
+News sources were selected with the goal of having an even split between left and right political views.
 <img src="images/dashboard.PNG" width="900"/>
 ### Average Sentiment Over Time:
 <img src="images/dashboard2.PNG" width="900"/>
@@ -47,4 +49,65 @@ A date slider is available to change the sample dates. News sources were selecte
 - **Beautifulsoup and Selenium**: Enabled webscraping of both JavaScript and non-JavaScript websites
 - **Pydantic**: Scraped/Extracted data validation
 
+## Prerequisites
+- Python 3.10+
+- PostgreSQL database to store the data (Must be hosted on another port to avoid port conflict between PostgreSQL that Airflow will use within docker)
+- Docker & Docker Compose
+- OpenAI API key and credits
 
+## Installation
+- ### Step 1:
+In your project folder, run the following in a terminal:
+```# Clone the repository
+git clone https://github.com/garettkaube/CanadianNewsDataPipeline.git
+cd CanadianNewsDataPipeline
+
+# Set up virtual environment
+python -m venv venv
+source venv/bin/activate
+
+# Install dependencies
+pip install -r requirements.txt
+```
+
+- ### Step 2:
+Change directory to the CanadianNewsDataPipeline folder and create .env file and add:
+- the POSTGRES_ADRESS environment variable as your postgres adress. E.g.: "postgresql://postgres:<password>@localhost:<port>/<database>"
+- environment=local_dev
+- ### Step 4:
+Initialize the database tables by navigating to ./airflow_news/dags/news/init_db.py and running the python script
+- ### Step 5:
+Within ./airflow_news/news_dbt/, add the profiles.yaml :
+```
+news:
+  outputs:
+    dev:
+      dbname: <Your_postgres_databse_name>
+      host: host.docker.internal
+      pass: <your_postgres_password>
+      port: <your_postgres_port (can't be 5433)>
+      schema: STAGE
+      threads: 1
+      type: postgres
+      user: postgres
+  target: dev
+```
+- ### Step 6:
+Run ```docker-compose  -f airflow_news/docker-compose.yaml up -d``` in the terminal and wait for completion
+- ### Step 7:
+Run ```docker-compose -f airflow/docker-compose.yaml run airflow-worker airflow users create --role Admin --username <username> --email <email> --firstname <name> --lastname <name> --password <password>``` in the terminal and wait for completion
+- ### Step 8:
+Open the Airflow UI at http://localhost:8080 and log into the account you just made
+- ### Step 9:
+In the Airflow UI, navigate to the connections page in the admin tab and add the Postgres connection and name it "postgres"
+- ### Step 10:
+In the Airflow UI, navigate to the variables page and add the variable "OpenAIKey" with value as your api key
+
+**Note**: Proxy use is enabled by default, to disable, set "use_proxy": false in the scraper config json files 
+
+Now the News_Ingestion pipleine should be able to be triggered and data should start flowing into the database.
+
+## Airflow DAGS:
+- News_Ingestion: scheduled every 3 hours to ELT news
+- Sentiment_Analysis: scheduled at 5 pm UTC every day to analyze a batch of articles. The dag will wait 2 hours for the batch to complete
+- load_sentiment: If the batch from Sentiment_Analysis took to long to process, this DAG can be ran manually to load the results
