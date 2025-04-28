@@ -49,6 +49,14 @@ News sources were selected with the goal of having an even split between left an
 - **Beautifulsoup and Selenium**: Enabled webscraping of both JavaScript and non-JavaScript websites
 - **Pydantic**: Scraped/Extracted data validation
 
+## Webscraping Methodology
+- News was sampled from multiple news pages and RSS feeds while the news source selection was determined by news bias (based on https://mediabiasfactcheck.com) and prominence (https://www.bbc.com/news/world-us-canada-16841120).
+- The news sites/RSS feeds that were scraped typically only have a fixed set of articles hence the need to use Airflow to schedule scraping every couple of hours in order to fully caputre the news.
+- The scrapers that use newspaper4k first extract all article links in the RSS feed or specified news page. The set of links may be further filtered based on config to ensure the scraper is scraping news articles and not something else.
+- Finally the each link is passed to either Selenium or straight to newspaper4k to get the article info.
+- Mechanisms were created to scrape the author information such as their email and profile URL in order to try to create a proper surrogate key in the authors table (Using only their name may cause problems as people can have the same name).
+- The manual news scraper works in similar fashion but only uses Beautifulsoup to gather article info.
+
 ## Prerequisites
 - Python 3.10+
 - PostgreSQL database to store the data (Must be hosted on another port to avoid port conflict between PostgreSQL that Airflow will use within docker)
@@ -111,3 +119,5 @@ Now the News_Ingestion pipleine should be able to be triggered and data should s
 - News_Ingestion: scheduled every 3 hours to ELT news
 - Sentiment_Analysis: scheduled at 5 pm UTC every day to analyze a batch of articles. The dag will wait 2 hours for the batch to complete
 - load_sentiment: If the batch from Sentiment_Analysis took to long to process, this DAG can be ran manually to load the results
+
+
