@@ -120,4 +120,6 @@ Now the News_Ingestion pipleine should be able to be triggered and data should s
 - Sentiment_Analysis: scheduled at 5 pm UTC every day to analyze a batch of articles. The dag will wait 2 hours for the batch to complete
 - load_sentiment: If the batch from Sentiment_Analysis took to long to process, this DAG can be ran manually to load the results
 
+## Running the dashboard
+Once there is loaded sentiment scores in Postgres, the dashboard can be launched with ```python -m streamlit run src/sentiment_dashboard.py```.
 
