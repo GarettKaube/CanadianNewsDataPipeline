@@ -4,9 +4,10 @@
 
 News data pipeline for extracting canadian news, loading them to postgres and transforming appropriately.
 The news scraping tries to use newspaper4k for majority of the weight lifting. A manual news scraper
-was created to scrape what newspaper4k fails to scrape. After scraping, the news is loaded to a Postgres database and transformed with dbt core.
+was created to scrape websites that newspaper4k fails to scrape. After scraping, the news is loaded to a PostgreSQL database and transformed with dbt core.
+Pipelines are scheduled using Apache Airflow which is hosted in docker with Docker-compose.
 
-After, news that mention the two most prominent Canadian Prime Minister candidates: Mark Carney and Pierre Poilievre. With these articles
+After, news that mention the two most prominent Canadian Prime Minister candidates: Mark Carney and Pierre Poilievre are extracted from the database. With these articles
 the OpenAI batch api is used to extract sentiment scores for each candidate if they are mentioned in the news article. These sentiment scores are
 loaded to postgres and the Results are displayed using streamlit and Plotly. With this streamlit dashboard, each candidate's overal news sentiment scores
 can be seen for the selected dates. Major Canadian news press were sampled while trying to keep political bias balanced to ensure non-biased results.
