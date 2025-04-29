@@ -16,6 +16,7 @@ can be seen for the selected dates.
 - Custom news scrapers for accurate, clean news extraction
 - Uses ELT and ETL hybrid pipeline managed with Apache Airflow where ELT automates news extraction, ingestion into Postgres, dbt transformations, while french articles are extracted from postgres and translated to english, loaded back to Postgres, then dbt transformed (ETL)
 - Streamlit dashboard for summarizing news sentiment for Mark Carney and Pierre Poilievre over time
+- Supports proxy use (probably overkill due to the small number of articles we can scrape)
 
 ## Architecture
 - ### Data Ingestion
