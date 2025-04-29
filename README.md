@@ -9,7 +9,7 @@ was created to scrape what newspaper4k fails to scrape. After scraping, the news
 After, news that mention the two most prominent Canadian Prime Minister candidates: Mark Carney and Pierre Poilievre. With these articles
 the OpenAI batch api is used to extract sentiment scores for each candidate if they are mentioned in the news article. These sentiment scores are
 loaded to postgres and the Results are displayed using streamlit and Plotly. With this streamlit dashboard, each candidate's overal news sentiment scores
-can be seen for the selected dates.
+can be seen for the selected dates. Major Canadian news press were sampled while trying to keep political bias balanced to ensure non-biased results.
 
 ## Features
 
@@ -48,6 +48,14 @@ News sources were selected with the goal of having an even split between left an
 - **OpenAI API**: Zero-shot sentiment analysis with gpt 4o mini 
 - **Beautifulsoup and Selenium**: Enabled webscraping of both JavaScript and non-JavaScript websites
 - **Pydantic**: Scraped/Extracted data validation
+
+## Webscraping Methodology
+- News was sampled from multiple news pages and RSS feeds while the news source selection was determined by news bias (based on https://mediabiasfactcheck.com) and prominence (https://www.bbc.com/news/world-us-canada-16841120).
+- The news sites/RSS feeds that were scraped typically only have a fixed set of articles hence the need to use Airflow to schedule scraping every couple of hours in order to fully caputre the news.
+- The scrapers that use newspaper4k first extract all article links in the RSS feed or specified news page. The set of links may be further filtered based on config to ensure the scraper is scraping news articles and not something else.
+- Finally, each link is passed to either newspaper4k to get the article info or Selenium to retrieve HTML from JavaScript websites then the HTML is passed to newspaper4k to get the article info.
+- Mechanisms were created to scrape the author information such as their email and profile URL in order to try to create a proper surrogate key in the authors table (Using only their name may cause problems as people can have the same name).
+- The manual news scraper works in similar fashion but only uses Beautifulsoup to gather article info.
 
 ## Prerequisites
 - Python 3.10+
@@ -95,7 +103,7 @@ news:
 - ### Step 6:
 Run ```docker-compose  -f airflow_news/docker-compose.yaml up -d``` in the terminal and wait for completion
 - ### Step 7:
-Run ```docker-compose -f airflow/docker-compose.yaml run airflow-worker airflow users create --role Admin --username <username> --email <email> --firstname <name> --lastname <name> --password <password>``` in the terminal and wait for completion
+Run ```docker-compose -f airflow/docker-compose.yaml run airflow-worker airflow users create --role Admin --username <username> --email <email> --firstname <name> --lastname <name> --password <password>``` in the terminal and wait for completion. This will create the Airflow profile to log into the UI
 - ### Step 8:
 Open the Airflow UI at http://localhost:8080 and log into the account you just made
 - ### Step 9:
@@ -111,3 +119,7 @@ Now the News_Ingestion pipleine should be able to be triggered and data should s
 - News_Ingestion: scheduled every 3 hours to ELT news
 - Sentiment_Analysis: scheduled at 5 pm UTC every day to analyze a batch of articles. The dag will wait 2 hours for the batch to complete
 - load_sentiment: If the batch from Sentiment_Analysis took to long to process, this DAG can be ran manually to load the results
+
+## Running the dashboard
+Once there is loaded sentiment scores in Postgres, the dashboard can be launched with ```python -m streamlit run src/sentiment_dashboard.py```.
+

@@ -21,6 +21,7 @@ import time
 import logging
 from news.log_setup import setup_logging
 import json
+from typing import Protocol
 
 
 # Pattern for emails
@@ -67,6 +68,9 @@ def get_rss_feed_links(rss_link, link_attributes:dict=None) -> list:
     
     return links
 
+class ArticleParser(Protocol):
+    def article(self, *args, **kwargs):
+        pass
 
 class SeleniumArticleParser:
     def article(self, url:str, **kwargs) -> Article:
@@ -295,14 +299,34 @@ def get_article_info(
 
 
 def article_extraction_loop(
-        news:list,
-        links, 
-        base_url,
-        n_articles,
-        scraper_settings,
-        article_parser
-    ):
+        links:list, 
+        base_url:str,
+        n_articles:int,
+        scraper_settings:dict,
+        article_parser: ArticleParser,
+        news:list | None=None
+    ) -> list[dict]:
+    """ Loops over the provided links list and gathers the article info for
+    each link
+
+    Parameters
+    ----------
+
+    news: list or None of already gathered news info if any
+
+    links: list URLs to articles
+
+    base_url: str URL of the websites main home page, 
+        e.g.: "https://www.website.com"
+
+    n_articles: int restrict the number of articles parsed
+
+    scraper_settings: dict
+    
+    article_parser: class that must have the article method
+    """
     for i, link in enumerate(links):
+        # Check robots.txt
         can_scrape = check_if_can_scrape(
             base_url=base_url, 
             url=link, 
