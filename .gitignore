@@ -5,7 +5,7 @@
 /airflow_news/newsdbt/.user.yml
 **/__pycache__
 /airflow_news/dags/sql/*
-/airflow_news/dags/news/logs/*
+airflow_news/dags/news/logs/*
 
 airflow_news/dags/test.ipynb
 airflow_news/dags/news/yo.py

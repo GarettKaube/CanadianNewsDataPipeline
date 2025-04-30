@@ -1,6 +1,11 @@
 import logging
 import logging.config
+from pathlib import Path
+import os
 def setup_logging(log_file_path='/opt/airflow/logs/log.log'):
+    logs_path = Path(log_file_path).parent
+    os.makedirs(logs_path, exist_ok=True)
+    
     logging.config.dictConfig({
         'version': 1,
         'disable_existing_loggers': False,
