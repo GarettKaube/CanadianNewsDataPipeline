@@ -48,7 +48,7 @@ News sources were selected with the goal of having an even split between left an
 - **dbt core**: Transform raw tables into an analysis-ready data model
 - **PostgreSQL**: Local data warehousing
 - **Docker**: Containerization of the Airflow environment
-- **Streamlit**: Interactive dashboard
+- **Streamlit and PowerBI**: Interactive dashboards
 - **OpenAI API**: Zero-shot sentiment analysis with gpt 4o mini 
 - **Beautifulsoup and Selenium**: Enabled webscraping of both JavaScript and non-JavaScript websites
 - **Pydantic**: Scraped/Extracted data validation
