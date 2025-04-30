@@ -9,7 +9,7 @@ Pipelines are scheduled using Apache Airflow which is hosted in docker with Dock
 
 After, news that mention the two most prominent Canadian Prime Minister candidates: Mark Carney and Pierre Poilievre are extracted from the database. With these articles
 the OpenAI batch api is used to extract sentiment scores for each candidate if they are mentioned in the news article. These sentiment scores are
-loaded to postgres and the Results are displayed using streamlit and Plotly. With this streamlit dashboard, each candidate's overal news sentiment scores
+loaded to postgres and the results are displayed using streamlit with Plotly and/or Microsoft PowerBI. With this streamlit dashboard, each candidate's overal news sentiment scores
 can be seen for the selected dates. Major Canadian news press were sampled while trying to keep political bias balanced to ensure non-biased results.
 
 ## Features
@@ -31,7 +31,7 @@ can be seen for the selected dates. Major Canadian news press were sampled while
 <img src="images/datamodel.PNG" width="800"/>
 
 ## Streamlit Dashboard
-The dashboard pulls data from the data marts based on the date slider input. The left plot displays the bias of the sampled news outlets the right pplot displays the average sentiment for each bias.
+The dashboard pulls data from the data marts based on the date slider input. The left plot displays the bias of the sampled news outlets the right plot displays the average sentiment for each bias.
 News sources were selected with the goal of having an even split between left and right political views.
 <img src="images/dashboard.PNG" width="900"/>
 ### Average Sentiment Over Time:
@@ -39,6 +39,9 @@ News sources were selected with the goal of having an even split between left an
 
 ### Word Cloud:
 <img src="images/dashboard3.PNG" width="800"/>
+
+## PowerBI Dashboard
+<img src="images/PowerBIDashboard.PNG" width="900"/>
 
 ## Tech Stack
 - **Apache Airflow**: Scheduling of pipelines and automated web scraping
